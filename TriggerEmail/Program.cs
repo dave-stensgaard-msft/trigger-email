@@ -25,6 +25,7 @@ namespace TriggerEmail
                 }
             }
 
+
             //Console.WriteLine("Done, press enter");
             //Console.ReadLine();
         }
