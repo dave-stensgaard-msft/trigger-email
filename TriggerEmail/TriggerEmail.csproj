@@ -127,6 +127,8 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="config\appsettings.keyvault.template" />
+    <Content Include="onyx.keyholdr.msbuild.targets" />
     <None Include="packages.config" />
     <None Include="Properties\webjob-publish-settings.json" />
     <Content Include="settings.job">
@@ -146,4 +148,5 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Web.WebJobs.Publish.2.0.0\build\Microsoft.Web.WebJobs.Publish.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.WebJobs.Publish.2.0.0\build\Microsoft.Web.WebJobs.Publish.targets'))" />
   </Target>
+  <Import Project="$(ProjectDir)\onyx.keyholdr.msbuild.targets" Condition="Exists('..\packages\Onyx.KeyholdR.MsBuild.1.0.50\tools\Onyx.KeyholdR.MsBuild.dll')" />
 </Project>
