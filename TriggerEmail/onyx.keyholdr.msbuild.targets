@@ -29,8 +29,6 @@
         <ItemGroup>
             <ConfigFilesToCopy Include="$(ProjectDir)config\*.config" />
         </ItemGroup>
-        <!--<Copy SourceFiles="@(ConfigFilesToCopy)" DestinationFolder="$(TargetDir)config" />-->
-        <Copy SourceFiles="@(ConfigFilesToCopy)" DestinationFolder="$(TargetDir)test" />
-        <Copy SourceFiles="@(ConfigFilesToCopy)" DestinationFolder="$(TargetDir)app_data\jobs\$(_jobPath)\$(_projName)\config" />
+        <Copy SourceFiles="@(ConfigFilesToCopy)" DestinationFolder="$(TargetDir)config" />
     </Target>
 </Project>
