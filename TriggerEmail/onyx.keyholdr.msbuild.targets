@@ -1,47 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Label="KeyholdR">
-    <BuildDependsOn>
-      ReplaceKeyVaultPlaceholders; 
-      $(BuildDependsOn)
-    </BuildDependsOn>
-    <AspNetPreCompileDependsOn>
-      $(AspNetPreCompileDependsOn);
-      KeyholdRCreateConfigFolderForAspNetCompile;
-    </AspNetPreCompileDependsOn>
-    <KeyholdR_VaultsOverrides Condition=" '$(KeyholdR_VaultsOverrides)' == '' ">aeo:aeo-preprod;onyxb:onyxb-preprod;onyx:onyx-preprod;</KeyholdR_VaultsOverrides>
-    <KeyholdR_SecretsOverrides Condition=" '$(KeyholdR_SecretsOverrides)' == '' ">
-    </KeyholdR_SecretsOverrides>
-    <KeyholdR_ClientId Condition=" '$(KeyholdR_ClientId)' == '' ">
-    </KeyholdR_ClientId>
-    <KeyholdR_Thumbprint Condition=" '$(KeyholdR_Thumbprint)' == '' ">
-    </KeyholdR_Thumbprint>
-    <KeyholdR_Secret Condition=" '$(KeyholdR_Secret)' == '' ">
-    </KeyholdR_Secret>
-    <KeyholdR_DirectoryId Condition=" '$(KeyholdR_DirectoryId)' == '' ">
-    </KeyholdR_DirectoryId>
-    <KeyholdR_RunTask Condition="'$(KeyholdR_RunTask)' == ''">true</KeyholdR_RunTask>
-  </PropertyGroup>
-  <ItemGroup>
-    <ConfigFilesToProcess Include="$(ProjectDir)\**\*.keyvault.template" />
-  </ItemGroup>
-  <UsingTask TaskName="KeyholdR" AssemblyFile="..\packages\Onyx.KeyholdR.MsBuild.1.0.50\tools\Onyx.KeyholdR.MsBuild.dll" />
-  <Target Name="ReplaceKeyVaultPlaceholders">
-    <KeyholdR Condition="'$(KeyholdR_RunTask)' == 'true'" ConfigFiles="@(ConfigFilesToProcess)" VaultsOverrides="$(KeyholdR_VaultsOverrides)" SecretsOverrides="$(KeyholdR_SecretsOverrides)" ClientId="$(KeyholdR_ClientId)" Thumbprint="$(KeyholdR_Thumbprint)" Secret="$(KeyholdR_Secret)" DirectoryId="$(KeyholdR_DirectoryId)" TeamCityMode="$(KeyholdR_TeamCityMode)" DebugTask="$(DebugTask)" />
-  </Target>
-  <Target Name="KeyholdRAfterBuild" AfterTargets="AfterBuild">
+    <PropertyGroup Label="KeyholdR">
+        <BuildDependsOn>
+            ReplaceKeyVaultPlaceholders;
+            $(BuildDependsOn)
+        </BuildDependsOn>
+        <KeyholdR_VaultsOverrides Condition=" '$(KeyholdR_VaultsOverrides)' == '' ">aeo:aeo-preprod</KeyholdR_VaultsOverrides>
+        <KeyholdR_SecretsOverrides Condition=" '$(KeyholdR_SecretsOverrides)' == '' ">
+        </KeyholdR_SecretsOverrides>
+        <KeyholdR_ClientId Condition=" '$(KeyholdR_ClientId)' == '' ">
+        </KeyholdR_ClientId>
+        <KeyholdR_Thumbprint Condition=" '$(KeyholdR_Thumbprint)' == '' ">
+        </KeyholdR_Thumbprint>
+        <KeyholdR_Secret Condition=" '$(KeyholdR_Secret)' == '' ">
+        </KeyholdR_Secret>
+        <KeyholdR_DirectoryId Condition=" '$(KeyholdR_DirectoryId)' == '' ">
+        </KeyholdR_DirectoryId>
+        <KeyholdR_RunTask Condition="'$(KeyholdR_RunTask)' == ''">true</KeyholdR_RunTask>
+    </PropertyGroup>
     <ItemGroup>
-      <ConfigFilesToCopy Include="$(ProjectDir)config\*.config" />
+        <ConfigFilesToProcess Include="$(ProjectDir)\**\*.keyvault.template" />
     </ItemGroup>
-    <Copy SourceFiles="@(ConfigFilesToCopy)" DestinationFolder="$(TargetDir)config" />
-  </Target>
-  <Target Name="KeyholdRAdditionalFilesForPackage" AfterTargets="CopyAllFilesToSingleFolderForPackage;CopyAllFilesToSingleFolderForMsDeploy">
-    <ItemGroup>
-      <ConfigFiles Include="$(MSBuildProjectDirectory)\config\*.config" />
-    </ItemGroup>
-    <Copy SourceFiles="@(ConfigFiles)" DestinationFiles="@(ConfigFiles-&gt;'$(_PackageTempDir)\config\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="false" />
-  </Target>
-  <Target Name="KeyholdRCreateConfigFolderForAspNetCompile">
-    <MakeDir Directories="$(_PreAspnetCompileMergeSingleTargetFolder)\config" />
-  </Target>
+    <UsingTask TaskName="KeyholdR" AssemblyFile="..\packages\Onyx.KeyholdR.MsBuild.1.0.50\tools\Onyx.KeyholdR.MsBuild.dll" />
+    <Target Name="ReplaceKeyVaultPlaceholders">
+        <KeyholdR Condition="'$(KeyholdR_RunTask)' == 'true'" ConfigFiles="@(ConfigFilesToProcess)" VaultsOverrides="$(KeyholdR_VaultsOverrides)" SecretsOverrides="$(KeyholdR_SecretsOverrides)" ClientId="$(KeyholdR_ClientId)" Thumbprint="$(KeyholdR_Thumbprint)" Secret="$(KeyholdR_Secret)" DirectoryId="$(KeyholdR_DirectoryId)" TeamCityMode="$(KeyholdR_TeamCityMode)" DebugTask="$(DebugTask)" />
+    </Target>
+    <Target Name="AfterBuild">
+        <ItemGroup>
+            <ConfigFilesToCopy Include="$(ProjectDir)config\*.config" />
+        </ItemGroup>
+        <Copy SourceFiles="@(ConfigFilesToCopy)" DestinationFolder="$(TargetDir)config" />
+    </Target>
 </Project>
