@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Serilog;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,8 +12,9 @@ namespace TriggerEmail
     {
         private static Configuration _configuration;
 
-        public static HttpClient GetAuthenticatedClient(Configuration configuration)
+        public static HttpClient GetAuthenticatedClient(Configuration configuration, ILogger logger)
         {
+            logger.Information("Building HttpCLient");
             _configuration = configuration;
             var keyVaultHelper = new KeyVaultHelper(configuration);
 

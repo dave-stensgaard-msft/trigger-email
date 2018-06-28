@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,27 +12,46 @@ namespace TriggerEmail
     class Program
     {
         private static Configuration configuration;
+        private static ILogger logger;
+        private static Guid requestId = Guid.NewGuid();
 
         static async Task Main(string[] args)
         {
             configuration = Configuration.ReadConfiguration();
+            logger = BuildLogger();
 
-            using (var client = AuthClient.GetAuthenticatedClient(configuration))
+            try
             {
-                var messageIds = await CreateEvent(client);
-                foreach (var messageId in messageIds)
+                using (var client = AuthClient.GetAuthenticatedClient(configuration, logger))
                 {
-                    await GetMessageStatus(client, messageId);
+                    var messageIds = await CreateEvent(client);
+                    foreach (var messageId in messageIds)
+                    {
+                        await GetMessageStatus(client, messageId);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, ex.Message);
+                throw;
             }
 
 
-            //Console.WriteLine("Done, press enter");
-            //Console.ReadLine();
+            Console.WriteLine("Done, press enter");
+            Console.ReadLine();
+        }
+
+        private static ILogger BuildLogger()
+        {
+            return new LoggerConfiguration()
+                .WriteTo.Console(outputTemplate:"[{Timestamp:HH:mm:ss} {Level:u3}] " + requestId.ToString() + " TriggerEmailJob {Message:lj}{NewLine}{Exception}")
+                .CreateLogger();
         }
 
         private static async Task<Guid[]> CreateEvent(HttpClient client)
         {
+            logger.Information("creating event");
             var url = "https://emails-stable.azure.net/api/v1/event";
             var newEventRequest = new NewEventRequest
             {
@@ -59,10 +79,11 @@ namespace TriggerEmail
             if (newEventResponse.IsSuccessStatusCode)
             {
                 var newEventResponseObj = JsonConvert.DeserializeObject<NewEventResponse>(newEventResponseContent);
+                logger.Information($"created event id: {newEventResponseObj.MessageIds[0]}");
                 return newEventResponseObj.MessageIds;
             }
 
-            Console.WriteLine($"Failed with {newEventResponse.StatusCode}");
+            logger.Error($"Failed with {newEventResponse.StatusCode}");
             return new Guid[] { };
         }
 
@@ -74,10 +95,7 @@ namespace TriggerEmail
             if (messageStatusResponse.IsSuccessStatusCode)
             {
                 var body = await messageStatusResponse.Content.ReadAsStringAsync();
-                var messageStatus = JsonConvert.DeserializeObject<MessageStatus>(body);
-
-                Console.Write(messageStatus.ToString());
-                Console.WriteLine();
+                logger.Information($"Message Status: {body}");
             }
         }
     }
