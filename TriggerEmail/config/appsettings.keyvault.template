@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <appSettings>
+    <add key="SeqServer" value="http://localhost:5341/" />
+    <add key="SeqServerApiKey" value="#{keyvault:aeo:jobs-seq-apikey}" />
+    <add key="SeqAllowFileBuffer" value="false" />
+    
     <add key="TriggerEmail.Appid" value="#{keyvault:aeo-preprod:testapp-triggeremail-appid}" />
     <add key="TriggerEMail.Secret" value="#{keyvault:aeo-preprod:testapp-triggeremail-secret}" />
 
