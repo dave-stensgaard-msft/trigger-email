@@ -13,8 +13,7 @@ namespace TriggerEmail
     {
         private static Configuration configuration;
         private static ILogger logger;
-        private static Guid requestId = Guid.NewGuid();
-
+        
         static async Task Main(string[] args)
         {
             configuration = Configuration.ReadConfiguration();
@@ -45,7 +44,8 @@ namespace TriggerEmail
         private static ILogger BuildLogger()
         {
             return new LoggerConfiguration()
-                .WriteTo.Console(outputTemplate:"[{Timestamp:HH:mm:ss} {Level:u3}] " + requestId.ToString() + " TriggerEmailJob {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Console()
+                .WriteTo.Seq(serverUrl:"http://localhost:5341")
                 .CreateLogger();
         }
 
