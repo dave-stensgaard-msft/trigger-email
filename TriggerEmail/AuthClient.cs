@@ -12,9 +12,9 @@ namespace TriggerEmail
     {
         private static Configuration _configuration;
 
-        public static HttpClient GetAuthenticatedClient(Configuration configuration, ILogger logger)
+        public static HttpClient GetAuthenticatedClient(Configuration configuration)
         {
-            logger.Information("Building HttpCLient");
+            Log.Logger.Information("Building HttpCLient");
             _configuration = configuration;
             var keyVaultHelper = new KeyVaultHelper(configuration);
 

@@ -16,7 +16,9 @@ namespace TriggerEmail.Entities
                     KeyVaultClientId = ConfigurationManager.AppSettings["KeyVault.ClientId"],
                     KeyVaultSecret = ConfigurationManager.AppSettings["KeyVault.Secret"],
                     KeyVaultCertificateThumbprint = ConfigurationManager.AppSettings["KeyVault.CertificateThumbprint"],
-                    KeyVaultDirectoryId = ConfigurationManager.AppSettings["KeyVault.DirectoryId"]
+                    KeyVaultDirectoryId = ConfigurationManager.AppSettings["KeyVault.DirectoryId"],
+                    SeqServer = ConfigurationManager.AppSettings["SeqServer"],
+                    SeqServerApiKey = ConfigurationManager.AppSettings["SeqServerApiKey"]
                 };
             }
             catch (Exception ex)
@@ -36,5 +38,9 @@ namespace TriggerEmail.Entities
         public string KeyVaultCertificateThumbprint { get; set; }
 
         public string KeyVaultDirectoryId { get; set; }
+
+        public string SeqServer { get; set; }
+
+        public string SeqServerApiKey { get; set; }
     }
 }
